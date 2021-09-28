@@ -1,0 +1,179 @@
+﻿using MarsQA_1.Helpers;
+using MarsQA_1.SpecflowPages.Helpers;
+using NUnit.Framework;
+using OpenQA.Selenium;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace MarsQA_1.SpecflowPages.Pages
+{
+    public class Updating_Skills
+    {
+        private static IWebElement SkillTab() => Driver.driver.FindElement(By.XPath(XPathHelper.SkillTab_XPath));
+        private static IWebElement AddNewBtn() => Driver.driver.FindElement(By.XPath(XPathHelper.AddNewBtn_XPath));
+        private static IWebElement AddBtn() => Driver.driver.FindElement(By.XPath(XPathHelper.AddBtn_XPath));
+        private static IWebElement AddSkillTextBox() => Driver.driver.FindElement(By.XPath(XPathHelper.AddSkillTextBox_Xpath));
+        private static IWebElement SkillLevelDropdown() => Driver.driver.FindElement(By.XPath(XPathHelper.SkillLevelDropdown_XPath));
+        private static IWebElement UpdateBtn() => Driver.driver.FindElement(By.XPath(XPathHelper.UpdateBtn_Xpath));
+        private static IWebElement UpdateIcon(String xpath) => Driver.driver.FindElement(By.XPath(xpath));
+        private static IWebElement UpdateSkillTextBox(String a) => Driver.driver.FindElement(By.XPath(a));
+        private static IWebElement UpdateSkillLevel(String a) => Driver.driver.FindElement(By.XPath(a));
+
+        public static void GoToSKillsTab()
+        {
+            //Click on Skill Tab
+            SkillTab().Click();
+        }
+
+        public static void EditSkills()
+        {
+            int i = 1, row = 1;
+
+            string Adding_Skills_Excel = "";
+            string Adding_Level_Excel = "";
+            string EditSkills_Excel = "";
+            string EditSkillLevel_Excel = "";
+
+            //Excel sheet path
+            ExcelLibHelper.PopulateInCollection(@"C:\Users\sobis\Desktop\Internship\Mars\Repo\MarsQA-1\SpecflowTests\Data\SkillsData.xlsx", "Editing Skill");
+            //Adding
+            do
+            {
+                if (i >= 2)
+                {
+                    //Click on AddNew button
+                    AddNewBtn().Click();
+                    //Enter Skill
+                    AddSkillTextBox().SendKeys(Adding_Skills_Excel);
+                    //Enter Skill Level
+                    SkillLevelDropdown().SendKeys(Adding_Level_Excel);
+                    //Click Add button
+                    AddBtn().Click();
+
+                    Thread.Sleep(2000);
+                    row = FindDataByRow(Adding_Skills_Excel, Adding_Level_Excel);
+                    string UpdateIcon_S = XPathHelper.UpdateIcon_Part1 + row + XPathHelper.UpdateIcon_Part2;
+                    string SkillTextBox_S = XPathHelper.SkillTextBox_Part1 + row + XPathHelper.SkillTextBox_Part2;
+                    string SkillLevel_S = XPathHelper.SkillLevel_Part1 + row + XPathHelper.SkillLevel_Part2;
+
+                    //Click on Update icon
+                    UpdateIcon(UpdateIcon_S).Click();
+                    //Enter Skill
+                    //Thread.Sleep(2000);
+                    UpdateSkillTextBox(SkillTextBox_S).Clear();
+                    UpdateSkillTextBox(SkillTextBox_S).SendKeys(EditSkills_Excel);
+                    //Enter Skill Level
+                    UpdateSkillLevel(SkillLevel_S).SendKeys(EditSkillLevel_Excel);
+                    //Click Add button
+                    UpdateBtn().Click();
+                }
+                i = i + 1;
+
+                //Read Skills from excel
+                Adding_Skills_Excel = ExcelLibHelper.ReadData(i, "Adding_Skills");
+                //Read Skill Level from excel
+                Adding_Level_Excel = ExcelLibHelper.ReadData(i, "Adding_SkillLevel");
+                //Read Skills from excel
+                EditSkills_Excel = ExcelLibHelper.ReadData(i, "EditSkills");
+                //Read Skill Level from excel
+                EditSkillLevel_Excel = ExcelLibHelper.ReadData(i, "EditSkillLevel");
+
+            } while (Adding_Skills_Excel != null);
+        }
+
+        public static void ValidateEditedSkills()
+        {
+            int i = 1;
+            string EditSkills_Excel = "";
+            string EditSkillLevel_Excel = "";
+            bool result = false;
+
+            //Excel sheet path
+            ExcelLibHelper.PopulateInCollection(@"C:\Users\sobis\Desktop\Internship\Mars\Repo\MarsQA-1\SpecflowTests\Data\SkillsData.xlsx", "Editing Skill");
+            
+            do
+            {
+                if (i >= 2)
+                {
+                    result = Compare(EditSkills_Excel, EditSkillLevel_Excel);
+                    Assert.AreEqual(true, result);
+                }
+                i = i + 1;
+
+                //Read Skills from excel
+                EditSkills_Excel = ExcelLibHelper.ReadData(i, "EditSkills");
+                //Read Skill Level from excel
+                EditSkillLevel_Excel = ExcelLibHelper.ReadData(i, "EditSkillLevel");
+
+            } while (EditSkills_Excel != null);
+        }
+
+        public static int FindDataByRow(String a, String b)
+        {
+            int i = 1;
+            //Get the table element
+            IWebElement tableElement = Driver.driver.FindElement(By.XPath("//div[@data-tab='second']//table"));
+            //Get table rows from table into a collection
+            IList<IWebElement> trCollection = tableElement.FindElements(By.TagName("tbody"));
+            //Define tabledata collection
+            IList<IWebElement> tdCollection;
+
+            //loop every row in the table and find the correct row for the input
+            foreach (IWebElement element in trCollection)
+            {
+
+                tdCollection = element.FindElements(By.TagName("td"));
+                //list of all the columns in the row
+                if (tdCollection.Count > 0)
+                {
+                    //Get the table data
+                    String Skill_Col = Driver.driver.FindElement(By.XPath("//div[@data-tab='second']//tbody[" + i + "]//tr//td[1]")).Text;
+                    String SkillLevel_Col = Driver.driver.FindElement(By.XPath("//div[@data-tab='second']//tbody[" + i + "]//tr//td[2]")).Text;
+
+                    if (a == Skill_Col && b == SkillLevel_Col)
+                    {
+                        return i;
+                    }
+                    i = i + 1;
+                }
+            }
+            return 0;
+        }
+
+        public static bool Compare(String a, String b)
+        {
+            int i = 1;
+            //Get the table element
+            IWebElement tableElement = Driver.driver.FindElement(By.XPath("//div[@data-tab='second']//table"));
+            //Get table rows from table into a collection
+            IList<IWebElement> trCollection = tableElement.FindElements(By.TagName("tbody"));
+            //Define tabledata collection
+            IList<IWebElement> tdCollection;
+
+            //loop every row in the table and find the correct row for the input
+            foreach (IWebElement element in trCollection)
+            {
+
+                tdCollection = element.FindElements(By.TagName("td"));
+                //list of all the columns in the row
+                if (tdCollection.Count > 0)
+                {
+                    //Get the table data
+                    String Skill_Col = Driver.driver.FindElement(By.XPath("//div[@data-tab='second']//tbody[" + i + "]//tr//td[1]")).Text;
+                    String SkillLevel_Col = Driver.driver.FindElement(By.XPath("//div[@data-tab='second']//tbody[" + i + "]//tr//td[2]")).Text;
+
+                    if (a == Skill_Col && b == SkillLevel_Col)
+                    {
+                        return true;
+                    }
+                    i = i + 1;
+                }
+            }
+            return false;
+        }
+    }
+}
