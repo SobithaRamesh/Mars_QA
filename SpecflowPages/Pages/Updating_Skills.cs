@@ -112,7 +112,7 @@ namespace MarsQA_1.SpecflowPages.Pages
             } while (EditSkills_Excel != null);
         }
 
-        public static int FindDataByRow(String a, String b)
+        public static int FindDataByRow(String Skill, String SkillLevel)
         {
             int i = 1;
             //Get the table element
@@ -134,7 +134,7 @@ namespace MarsQA_1.SpecflowPages.Pages
                     String Skill_Col = Driver.driver.FindElement(By.XPath("//div[@data-tab='second']//tbody[" + i + "]//tr//td[1]")).Text;
                     String SkillLevel_Col = Driver.driver.FindElement(By.XPath("//div[@data-tab='second']//tbody[" + i + "]//tr//td[2]")).Text;
 
-                    if (a == Skill_Col && b == SkillLevel_Col)
+                    if (Skill == Skill_Col && SkillLevel == SkillLevel_Col)
                     {
                         return i;
                     }
@@ -144,7 +144,7 @@ namespace MarsQA_1.SpecflowPages.Pages
             return 0;
         }
 
-        public static bool Compare(String a, String b)
+        public static bool Compare(String Skill, String SkillLevel)
         {
             int i = 1;
             //Get the table element
@@ -166,7 +166,7 @@ namespace MarsQA_1.SpecflowPages.Pages
                     String Skill_Col = Driver.driver.FindElement(By.XPath("//div[@data-tab='second']//tbody[" + i + "]//tr//td[1]")).Text;
                     String SkillLevel_Col = Driver.driver.FindElement(By.XPath("//div[@data-tab='second']//tbody[" + i + "]//tr//td[2]")).Text;
 
-                    if (a == Skill_Col && b == SkillLevel_Col)
+                    if (Skill == Skill_Col && SkillLevel == SkillLevel_Col)
                     {
                         return true;
                     }

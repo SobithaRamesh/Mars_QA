@@ -89,7 +89,7 @@ namespace MarsQA_1.SpecflowPages.Pages
             } while (Adding_Skill_Excel != null);
         }
 
-        public static bool VerifyDeletedData(String a, String b)
+        public static bool VerifyDeletedData(String Skill, String SkillLevel)
         {
             Thread.Sleep(3000);
             int i = 1;
@@ -111,7 +111,7 @@ namespace MarsQA_1.SpecflowPages.Pages
                     String Skill_Col = Driver.driver.FindElement(By.XPath("//div[@data-tab='second']//tbody[" + i + "]//tr//td[1]")).Text;
                     String SkillLevel_Col = Driver.driver.FindElement(By.XPath("//div[@data-tab='second']//tbody[" + i + "]//tr//td[2]")).Text;
 
-                    if (a == Skill_Col && b == SkillLevel_Col)
+                    if (Skill == Skill_Col && SkillLevel == SkillLevel_Col)
                     {
                         return false;
                     }

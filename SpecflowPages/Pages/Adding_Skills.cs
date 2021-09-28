@@ -15,7 +15,8 @@ namespace MarsQA_1.SpecflowPages.Pages
     {
         private static IWebElement SkillTab() => Driver.driver.FindElement(By.XPath(XPathHelper.SkillTab_XPath));
         private static IWebElement AddNewBtn() => Driver.driver.FindElement(By.XPath(XPathHelper.AddNewBtn_XPath));
-        private static IWebElement AddBtn() => Driver.driver.FindElement(By.XPath(XPathHelper.AddBtn_XPath));        private static IWebElement AddSkillTextBox() => Driver.driver.FindElement(By.XPath(XPathHelper.AddSkillTextBox_Xpath));
+        private static IWebElement AddBtn() => Driver.driver.FindElement(By.XPath(XPathHelper.AddBtn_XPath));       
+        private static IWebElement AddSkillTextBox() => Driver.driver.FindElement(By.XPath(XPathHelper.AddSkillTextBox_Xpath));
         private static IWebElement SkillLevelDropdown() => Driver.driver.FindElement(By.XPath(XPathHelper.SkillLevelDropdown_XPath));
              
         public static void GoToSKillsTab()
@@ -83,7 +84,7 @@ namespace MarsQA_1.SpecflowPages.Pages
             } while (AddSkills_Excel != null);
         }
 
-        public static bool Compare(String a, String b)
+        public static bool Compare(String Skill, String SkillLevel)
         {
             int i = 1;
 
@@ -107,7 +108,7 @@ namespace MarsQA_1.SpecflowPages.Pages
                     String Skill_Col = Driver.driver.FindElement(By.XPath("//div[@data-tab='second']//tbody[" + i + "]//tr//td[1]")).Text;
                     String SkillLevel_Col = Driver.driver.FindElement(By.XPath("//div[@data-tab='second']//tbody[" + i + "]//tr//td[2]")).Text;
 
-                    if (a == Skill_Col && b == SkillLevel_Col)
+                    if (Skill == Skill_Col && SkillLevel == SkillLevel_Col)
                     {
                         return true;
                     }
@@ -115,39 +116,6 @@ namespace MarsQA_1.SpecflowPages.Pages
                 }
             }
             return false;
-        }
-
-        public static bool VerifyDeletedData(String a, String b)
-        {
-            Thread.Sleep(3000);
-            int i = 1;
-            //Get the table element
-            IWebElement tableElement = Driver.driver.FindElement(By.XPath("//div[@data-tab='second']//table"));
-            //Get table rows from table into a collection
-            IList<IWebElement> trCollection = tableElement.FindElements(By.TagName("tbody"));
-            //Define tabledata collection
-            IList<IWebElement> tdCollection;
-
-            //loop every row in the table and find the correct row for the input
-            foreach (IWebElement element in trCollection)
-            {
-                tdCollection = element.FindElements(By.TagName("td"));
-
-                //list of all the columns in the row
-                if (tdCollection.Count > 0)
-                {
-                    //Get table data
-                    String Skill_Col = Driver.driver.FindElement(By.XPath("//div[@data-tab='second']//tbody[" + i + "]//tr//td[1]")).Text;
-                    String SkillLevel_Col = Driver.driver.FindElement(By.XPath("//div[@data-tab='second']//tbody[" + i + "]//tr//td[2]")).Text;
-
-                    if (a == Skill_Col && b == SkillLevel_Col)
-                    {
-                        return false;
-                    }
-                    i = i + 1;
-                }
-            }
-            return true;
-        }       
+        }     
     }
 }
