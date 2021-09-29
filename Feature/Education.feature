@@ -19,7 +19,13 @@ Scenario: Delete Seller's Education
 	Then The Education should be deleted successfully 
 
 @Add invalid Education data
-Scenario: Delete Seller's Education
+Scenario: Add invalid Education data
 	Given Seller is in profile page
 	When Seller didn't add all the data
-	Then The education should be not added successfully 
+	Then The Education should not be added successfully 
+
+@Invalid Education data
+Scenario: Invalid Education
+	Given Seller is in profile page
+	When Seller adds duplicate Education
+	Then The Education should not be added successfully 

@@ -127,7 +127,7 @@ namespace MarsQA_1.SpecflowPages.Pages
                     UpdateSkillTextBox(SkillTextBox_S).SendKeys(EditSkills_Excel);
                     //Enter Skill Level
                     UpdateSkillLevel(SkillLevel_S).SendKeys(EditSkillLevel_Excel);
-                    //Click Add button
+                    //Click Update button
                     UpdateBtn().Click();
                 }
                 i = i + 1;

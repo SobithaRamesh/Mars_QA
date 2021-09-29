@@ -19,7 +19,21 @@ Scenario: Delete Seller's known language
 	Then The language and level should be deleted successfully 
 
 @Add invalid Language data
-Scenario: Edit Seller's Language
+Scenario: Invalid Language
 	Given Seller is in profile page
 	When Seller didn't add all the data
-	Then The Language should be not added successfully 
+	Then The Language should not be added successfully 
+
+@Add invalid Language data
+Scenario: Invalid Language
+	Given Seller is in profile page
+	When Seller adds four Languages
+	Then The Add New Button should not be shown
+
+@Invalid Language data
+Scenario: Invalid Language
+	Given Seller is in profile page
+	When Seller adds duplicate Languages
+	Then The Language should not be added successfully 
+
+
