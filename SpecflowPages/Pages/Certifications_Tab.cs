@@ -139,29 +139,33 @@ namespace MarsQA_1.SpecflowPages.Pages
 
                     //Click on Update icon
                     CertiUpdateIcon(CertiUpdateIcon_C).Click();
-                    //Enter Skill
-                    Thread.Sleep(2000);
-                    UpdateCertiTextBox(CertiTextBox_C).Clear();
-                    UpdateCertiTextBox(CertiTextBox_C).SendKeys(EditCertifications_Excel);
-                    UpdateFromTextBox(FromTextBox_C).Clear();
-                    UpdateFromTextBox(FromTextBox_C).SendKeys(EditCertifiedFrom_Excel);
-                    //Enter Skill Level
-                    UpdateYearofCertificationDropdown(YearofCertificationDropdown_C).SendKeys(EditCertifiedYear_Excel);
                     
+                    Thread.Sleep(2000);
+                    
+                    UpdateCertiTextBox(CertiTextBox_C).Clear();
+                    //Enter Certification
+                    UpdateCertiTextBox(CertiTextBox_C).SendKeys(EditCertifications_Excel);   
+                    UpdateFromTextBox(FromTextBox_C).Clear();
+                    //Enter Certified from
+                    UpdateFromTextBox(FromTextBox_C).SendKeys(EditCertifiedFrom_Excel);
+                    //Enter year of Certification
+                    UpdateYearofCertificationDropdown(YearofCertificationDropdown_C).SendKeys(EditCertifiedYear_Excel);
 
                     //Click Update button
                     CertiUpdateBtn().Click();
                 }
                 i = i + 1;
-                //Read Skills from excel
+                //Read Certification from excel
                 AddCertifications_Excel = ExcelLibHelper.ReadData(i, "Adding_Certi");
-                //Read Skill Level from excel
+                //Read CertifiedFrom from excel
                 AddCertifiedFrom_Excel = ExcelLibHelper.ReadData(i, "Adding_CertifiedFrom");
-                AddCertifiedYear_Excel= ExcelLibHelper.ReadData(i, "Adding_Year");
-                //Read Skills from excel
+                //Read year of Certification
+                AddCertifiedYear_Excel = ExcelLibHelper.ReadData(i, "Adding_Year");
+                //Read Certification from excel
                 EditCertifications_Excel = ExcelLibHelper.ReadData(i, "EditCerti");
-                //Read Skill Level from excel
+                //Read CertifiedFrom from excel
                 EditCertifiedFrom_Excel = ExcelLibHelper.ReadData(i, "EditCertifiedFrom");
+                //Read year of Certification
                 EditCertifiedYear_Excel = ExcelLibHelper.ReadData(i, "EditYear");
 
 
@@ -189,10 +193,11 @@ namespace MarsQA_1.SpecflowPages.Pages
                 }
                 i = i + 1;
 
-                //Read Skills from excel
-                EditCertifications_Excel = ExcelLibHelper.ReadData(i, "EditCerti");
-                //Read Skill Level from excel
+                //Read Certification from excel
+                 EditCertifications_Excel = ExcelLibHelper.ReadData(i, "EditCerti");
+                //Read CertifiedFrom from excel
                 EditCertifiedFrom_Excel = ExcelLibHelper.ReadData(i, "EditCertifiedFrom");
+                //Read year of Certification
                 EditCertifiedYear_Excel = ExcelLibHelper.ReadData(i, "EditYear");
 
             } while (EditCertifications_Excel != null);
@@ -228,10 +233,11 @@ namespace MarsQA_1.SpecflowPages.Pages
                 }
                 i = i + 1;
 
-                //Read Skill from excel
+                //Read Certification from excel
                 AddCertifications_Excel = ExcelLibHelper.ReadData(i, "Add_Award");
-                //Read Skill Level from excel
+                //Read CertifiedFrom from excel
                 AddCertifiedFrom_Excel = ExcelLibHelper.ReadData(i, "Add_From");
+                //Read year of Certification
                 AddCertifiedYear_Excel = ExcelLibHelper.ReadData(i, "Add_Year");
 
             } while (AddCertifications_Excel != null);
@@ -257,10 +263,12 @@ namespace MarsQA_1.SpecflowPages.Pages
                     Assert.AreEqual(true, result);
                 }
                 i = i + 1;
-                //Read Skill from excel
+
+                //Read Certification from excel
                 AddCertifications_Excel = ExcelLibHelper.ReadData(i, "Add_Award");
-                //Read Skill Level from excel
+                //Read CertifiedFrom from excel
                 AddCertifiedFrom_Excel = ExcelLibHelper.ReadData(i, "Add_From");
+                //Read year of Certification
                 AddCertifiedYear_Excel = ExcelLibHelper.ReadData(i, "Add_Year");
 
             } while (AddCertifications_Excel != null);
