@@ -11,46 +11,41 @@ using System.Threading.Tasks;
 
 namespace MarsQA_1.SpecflowPages.Pages
 {
-    public static class Skill_Tab
-    {
-        private static IWebElement SkillTab() => Driver.driver.FindElement(By.XPath(XPathHelper.SkillTab_XPath));
-        private static IWebElement AddNewBtn() => Driver.driver.FindElement(By.XPath(XPathHelper.AddNewBtn_XPath));
-        private static IWebElement AddBtn() => Driver.driver.FindElement(By.XPath(XPathHelper.AddBtn_XPath));       
-        private static IWebElement AddSkillTextBox() => Driver.driver.FindElement(By.XPath(XPathHelper.AddSkillTextBox_Xpath));
-        private static IWebElement SkillLevelDropdown() => Driver.driver.FindElement(By.XPath(XPathHelper.SkillLevelDropdown_XPath));
-        private static IWebElement UpdateBtn() => Driver.driver.FindElement(By.XPath(XPathHelper.UpdateBtn_Xpath));
-        private static IWebElement UpdateIcon(String xpath) => Driver.driver.FindElement(By.XPath(xpath));
-        private static IWebElement UpdateSkillTextBox(String xpath) => Driver.driver.FindElement(By.XPath(xpath));
-        private static IWebElement UpdateSkillLevel(String xpath) => Driver.driver.FindElement(By.XPath(xpath));
-        private static IWebElement DeleteIcon(String xpath) => Driver.driver.FindElement(By.XPath(xpath));
+     class Skill_Tab
+    {   
+        private IWebElement SkillTab() => Driver.driver.FindElement(By.XPath(XPathHelper.SkillTab_XPath));
+        private IWebElement AddNewBtn() => Driver.driver.FindElement(By.XPath(XPathHelper.AddNewBtn_XPath));
+        private IWebElement AddBtn() => Driver.driver.FindElement(By.XPath(XPathHelper.AddBtn_XPath));       
+        private IWebElement AddSkillTextBox() => Driver.driver.FindElement(By.XPath(XPathHelper.AddSkillTextBox_Xpath));
+        private IWebElement SkillLevelDropdown() => Driver.driver.FindElement(By.XPath(XPathHelper.SkillLevelDropdown_XPath));
+        private IWebElement UpdateBtn() => Driver.driver.FindElement(By.XPath(XPathHelper.UpdateBtn_Xpath));
+        private IWebElement UpdateIcon(String xpath) => Driver.driver.FindElement(By.XPath(xpath));
+        private IWebElement UpdateSkillTextBox(String xpath) => Driver.driver.FindElement(By.XPath(xpath));
+        private IWebElement UpdateSkillLevel(String xpath) => Driver.driver.FindElement(By.XPath(xpath));
+        private IWebElement DeleteIcon(String xpath) => Driver.driver.FindElement(By.XPath(xpath));
 
-        public static void GoToSKillsTab()
+        public string AddSkills_Excel { get; private set; }
+        public string AddSkillLevel_Excel { get; private set; }
+
+        public void GoToSKillsTab()
         {
             //Click on Skill Tab
             SkillTab().Click();
         }
 
-        public static void AddSkills()
+        public void AddSkills()
         {
             int i = 1;
-            string AddSkills_Excel = "";
-            string AddSkillLevel_Excel = "";
 
             //Excel sheet path
-            ExcelLibHelper.PopulateInCollection(@"C:\Users\sobis\Desktop\Internship\Mars\Repo\MarsQA-1\SpecflowTests\Data\SkillsData.xlsx", "Adding Skill");
+            ExcelLibHelper.PopulateInCollection(ConstantHelpers.SkillsExcelPath,ConstantHelpers.AddingSkillsSheet);
             
             do
             {
                 if (i >= 2)
                 {
-                    //Click on AddNew button
-                    AddNewBtn().Click();
-                    //Enter Skill
-                    AddSkillTextBox().SendKeys(AddSkills_Excel);
-                    //Enter Skill Level
-                    SkillLevelDropdown().SendKeys(AddSkillLevel_Excel);
-                    //Click Add button
-                    AddBtn().Click();
+                    //Adding Skills and SkillLevel data
+                    AddSkillData();
                 }
                 i = i + 1;
 
@@ -62,14 +57,9 @@ namespace MarsQA_1.SpecflowPages.Pages
             } while (AddSkills_Excel != null);
         }
 
-        public static void ValidateAddedSkills()
-        {
-            //Excel sheet path
-            ExcelLibHelper.PopulateInCollection(@"C:\Users\sobis\Desktop\Internship\Mars\Repo\MarsQA-1\SpecflowTests\Data\SkillsData.xlsx", "Adding Skill");
-            
+        public bool ValidateAddedSkills()
+        {   
             int i = 1;
-            string AddSkills_Excel = "";
-            string AddSkillLevel_Excel = "";
             bool result = false;
 
             do
@@ -77,7 +67,7 @@ namespace MarsQA_1.SpecflowPages.Pages
                 if (i >= 2)
                 {
                     result = Compare(AddSkills_Excel, AddSkillLevel_Excel);
-                    Assert.AreEqual(true, result);
+                    return true;
                 }
                 i = i + 1;
 
@@ -87,42 +77,34 @@ namespace MarsQA_1.SpecflowPages.Pages
                 AddSkillLevel_Excel = ExcelLibHelper.ReadData(i, "SkillLevel");
 
             } while (AddSkills_Excel != null);
+            return false;
         }
 
-        public static void EditSkills()
+        public void EditSkills()
         {
             int i = 1, row = 1;
-
-            string Adding_Skills_Excel = "";
-            string Adding_Level_Excel = "";
             string EditSkills_Excel = "";
             string EditSkillLevel_Excel = "";
 
             //Excel sheet path
-            ExcelLibHelper.PopulateInCollection(@"C:\Users\sobis\Desktop\Internship\Mars\Repo\MarsQA-1\SpecflowTests\Data\SkillsData.xlsx", "Editing Skill");
+            ExcelLibHelper.PopulateInCollection(ConstantHelpers.SkillsExcelPath,ConstantHelpers.EditingSkillsSheet);
             //Adding
             do
             {
                 if (i >= 2)
                 {
-                    //Click on AddNew button
-                    AddNewBtn().Click();
-                    //Enter Skill
-                    AddSkillTextBox().SendKeys(Adding_Skills_Excel);
-                    //Enter Skill Level
-                    SkillLevelDropdown().SendKeys(Adding_Level_Excel);
-                    //Click Add button
-                    AddBtn().Click();
+                    //Adding Skills and SkillLevel data
+                    AddSkillData();
 
                     Thread.Sleep(2000);
-                    row = FindDataByRow(Adding_Skills_Excel, Adding_Level_Excel);
+                    row = FindDataByRow(AddSkills_Excel, AddSkillLevel_Excel);
                     string UpdateIcon_S = XPathHelper.UpdateIcon_Part1 + row + XPathHelper.UpdateIcon_Part2;
                     string SkillTextBox_S = XPathHelper.SkillTextBox_Part1 + row + XPathHelper.SkillTextBox_Part2;
                     string SkillLevel_S = XPathHelper.SkillLevel_Part1 + row + XPathHelper.SkillLevel_Part2;
+                    
                     //Click on Update icon
                     UpdateIcon(UpdateIcon_S).Click();
                     //Enter Skill
-                    //Thread.Sleep(2000);
                     UpdateSkillTextBox(SkillTextBox_S).Clear();
                     UpdateSkillTextBox(SkillTextBox_S).SendKeys(EditSkills_Excel);
                     //Enter Skill Level
@@ -133,33 +115,30 @@ namespace MarsQA_1.SpecflowPages.Pages
                 i = i + 1;
 
                 //Read Skills from excel
-                Adding_Skills_Excel = ExcelLibHelper.ReadData(i, "Adding_Skills");
+                AddSkills_Excel = ExcelLibHelper.ReadData(i, "Adding_Skills");
                 //Read Skill Level from excel
-                Adding_Level_Excel = ExcelLibHelper.ReadData(i, "Adding_SkillLevel");
+                AddSkillLevel_Excel = ExcelLibHelper.ReadData(i, "Adding_SkillLevel");
                 //Read Skills from excel
                 EditSkills_Excel = ExcelLibHelper.ReadData(i, "EditSkills");
                 //Read Skill Level from excel
                 EditSkillLevel_Excel = ExcelLibHelper.ReadData(i, "EditSkillLevel");
 
-            } while (Adding_Skills_Excel != null);
+            } while (AddSkills_Excel != null);
         }
 
-        public static void ValidateEditedSkills()
+        public bool ValidateEditedSkills()
         {
             int i = 1;
             string EditSkills_Excel = "";
             string EditSkillLevel_Excel = "";
             bool result = false;
 
-            //Excel sheet path
-            ExcelLibHelper.PopulateInCollection(@"C:\Users\sobis\Desktop\Internship\Mars\Repo\MarsQA-1\SpecflowTests\Data\SkillsData.xlsx", "Editing Skill");
-
             do
             {
                 if (i >= 2)
                 {
                     result = Compare(EditSkills_Excel, EditSkillLevel_Excel);
-                    Assert.AreEqual(true, result);
+                    return true;
                 }
                 i = i + 1;
 
@@ -169,51 +148,40 @@ namespace MarsQA_1.SpecflowPages.Pages
                 EditSkillLevel_Excel = ExcelLibHelper.ReadData(i, "EditSkillLevel");
 
             } while (EditSkills_Excel != null);
+            return false;
         }
 
-        public static void DeleteSkills()
+        public void DeleteSkills()
         {
             int i = 1, row;
-            string Adding_Skill_Excel = "";
-            string Adding_SkillLevel_Excel = "";
 
-            ExcelLibHelper.PopulateInCollection(@"C:\Users\sobis\Desktop\Internship\Mars\Repo\MarsQA-1\SpecflowTests\Data\SkillsData.xlsx", "Deleting Skill");
+            ExcelLibHelper.PopulateInCollection(ConstantHelpers.SkillsExcelPath,ConstantHelpers.DeletingSkillsSheet);
             do
             {
                 if (i >= 2)
                 {
-                    //Click on AddNew button
-                    AddNewBtn().Click();
-                    //Enter Skill
-                    AddSkillTextBox().SendKeys(Adding_Skill_Excel);
-                    //Enter Skill Level
-                    SkillLevelDropdown().SendKeys(Adding_SkillLevel_Excel);
-                    //Click Add button
-                    AddBtn().Click();
+                    //Adding Skills and SkillLevel data
+                    AddSkillData();
 
                     Thread.Sleep(2000);
-                    row = FindDataByRow(Adding_Skill_Excel, Adding_SkillLevel_Excel);
+                    row = FindDataByRow(AddSkills_Excel, AddSkillLevel_Excel);
                     string DeleteIcon_S = XPathHelper.DeleteIcon_Part1 + row + XPathHelper.DeleteIcon_Part2;
                     DeleteIcon(DeleteIcon_S).Click();
                 }
                 i = i + 1;
 
                 //Read Skill from excel
-                Adding_Skill_Excel = ExcelLibHelper.ReadData(i, "Add_Skill");
+                AddSkills_Excel = ExcelLibHelper.ReadData(i, "Add_Skill");
                 //Read Skill Level from excel
-                Adding_SkillLevel_Excel = ExcelLibHelper.ReadData(i, "Add_SkillLevel");
+                AddSkillLevel_Excel = ExcelLibHelper.ReadData(i, "Add_SkillLevel");
 
-            } while (Adding_Skill_Excel != null);
+            } while (AddSkills_Excel != null);
         }
 
-        public static void ValidateDeleteSkills()
+        public bool ValidateDeleteSkills()
         {
 
-            ExcelLibHelper.PopulateInCollection(@"C:\Users\sobis\Desktop\Internship\Mars\Repo\MarsQA-1\SpecflowTests\Data\SkillsData.xlsx", "Deleting Skill");
-
             int i = 1;
-            string Adding_Skill_Excel = "";
-            string Adding_SkillLevel_Excel = "";
             bool result = false;
 
             do
@@ -221,20 +189,21 @@ namespace MarsQA_1.SpecflowPages.Pages
                 if (i >= 2)
                 {
 
-                    result = VerifyDeletedData(Adding_Skill_Excel, Adding_SkillLevel_Excel);
-                    Assert.AreEqual(true, result);
+                    result = VerifyDeletedData(AddSkills_Excel, AddSkillLevel_Excel);
+                    return true;
                 }
                 i = i + 1;
                 //Read Skills from excel
-                Adding_Skill_Excel = ExcelLibHelper.ReadData(i, "Add_Skill");
+                AddSkills_Excel = ExcelLibHelper.ReadData(i, "Add_Skill");
                 //Read Skill Level from excel
-                Adding_SkillLevel_Excel = ExcelLibHelper.ReadData(i, "Add_SkillLevel");
+                AddSkillLevel_Excel = ExcelLibHelper.ReadData(i, "Add_SkillLevel");
 
-            } while (Adding_Skill_Excel != null);
+            } while (AddSkills_Excel != null);
+            return false;
         }
 
 
-        public static bool Compare(String Skill, String SkillLevel)
+        public bool Compare(String Skill, String SkillLevel)
         {
             int i = 1;
 
@@ -268,7 +237,7 @@ namespace MarsQA_1.SpecflowPages.Pages
             return false;
         }
 
-        public static int FindDataByRow(String Skill, String SkillLevel)
+        public int FindDataByRow(String Skill, String SkillLevel)
         {
             int i = 1;
             //Get the table element
@@ -300,7 +269,7 @@ namespace MarsQA_1.SpecflowPages.Pages
             return 0;
         }
 
-        public static bool VerifyDeletedData(String Skill, String SkillLevel)
+        public bool VerifyDeletedData(String Skill, String SkillLevel)
         {
             Thread.Sleep(3000);
             int i = 1;
@@ -332,5 +301,18 @@ namespace MarsQA_1.SpecflowPages.Pages
             return true;
         }
 
+        public void AddSkillData()
+        {
+            //Click on AddNew button
+            AddNewBtn().Click();
+            //Enter Skill
+            AddSkillTextBox().SendKeys(AddSkills_Excel);
+            //Enter Skill Level
+            SkillLevelDropdown().SendKeys(AddSkillLevel_Excel);
+            //Click Add button
+            AddBtn().Click();
+        }
+
+       
     }
 }

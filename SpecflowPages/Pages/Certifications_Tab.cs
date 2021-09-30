@@ -13,50 +13,42 @@ namespace MarsQA_1.SpecflowPages.Pages
 {
     class Certifications_Tab
     {
-        private static IWebElement CertificationsTab() => Driver.driver.FindElement(By.XPath(XPathHelper.CertificationsTab_XPath));
-        private static IWebElement AddCertificationTextBox() => Driver.driver.FindElement(By.XPath(XPathHelper.AddCertificationTextBox_XPath));
-        private static IWebElement CertifiedFromTextBox() => Driver.driver.FindElement(By.XPath(XPathHelper.CertifiedFromTextBox_XPath));
-        private static IWebElement YearofCertificationDropdown() => Driver.driver.FindElement(By.XPath(XPathHelper.YearofCertificationDropdown_XPath));
-        private static IWebElement CertiAddNewBtn() => Driver.driver.FindElement(By.XPath(XPathHelper.CertiAddNewBtn_XPath));
-        private static IWebElement CertiAddBtn() => Driver.driver.FindElement(By.XPath(XPathHelper.CertiAddBtn_XPath));
-        private static IWebElement CertiUpdateBtn() => Driver.driver.FindElement(By.XPath(XPathHelper.CertiUpdateBtn_Xpath));
-        private static IWebElement CertiUpdateIcon(string xpath) => Driver.driver.FindElement(By.XPath(xpath));
-        private static IWebElement UpdateCertiTextBox(string xpath) => Driver.driver.FindElement(By.XPath(xpath));
-        private static IWebElement UpdateFromTextBox(string xpath) => Driver.driver.FindElement(By.XPath(xpath));
-        private static IWebElement UpdateYearofCertificationDropdown(string xpath) => Driver.driver.FindElement(By.XPath(xpath));
-        private static IWebElement CertiDeleteIcon(string xpath) => Driver.driver.FindElement(By.XPath(xpath));
+        private IWebElement CertificationsTab() => Driver.driver.FindElement(By.XPath(XPathHelper.CertificationsTab_XPath));
+        private IWebElement AddCertificationTextBox() => Driver.driver.FindElement(By.XPath(XPathHelper.AddCertificationTextBox_XPath));
+        private IWebElement CertifiedFromTextBox() => Driver.driver.FindElement(By.XPath(XPathHelper.CertifiedFromTextBox_XPath));
+        private IWebElement YearofCertificationDropdown() => Driver.driver.FindElement(By.XPath(XPathHelper.YearofCertificationDropdown_XPath));
+        private IWebElement CertiAddNewBtn() => Driver.driver.FindElement(By.XPath(XPathHelper.CertiAddNewBtn_XPath));
+        private IWebElement CertiAddBtn() => Driver.driver.FindElement(By.XPath(XPathHelper.CertiAddBtn_XPath));
+        private IWebElement CertiUpdateBtn() => Driver.driver.FindElement(By.XPath(XPathHelper.CertiUpdateBtn_Xpath));
+        private IWebElement CertiUpdateIcon(string xpath) => Driver.driver.FindElement(By.XPath(xpath));
+        private IWebElement UpdateCertiTextBox(string xpath) => Driver.driver.FindElement(By.XPath(xpath));
+        private IWebElement UpdateFromTextBox(string xpath) => Driver.driver.FindElement(By.XPath(xpath));
+        private IWebElement UpdateYearofCertificationDropdown(string xpath) => Driver.driver.FindElement(By.XPath(xpath));
+        private IWebElement CertiDeleteIcon(string xpath) => Driver.driver.FindElement(By.XPath(xpath));
 
+        public string AddCertifications_Excel { get; private set; }
+        public string AddCertifiedFrom_Excel { get; private set; }
+        public string AddCertifiedYear_Excel { get; private set; }
 
-        public static void GoToCertificationsTab()
+        public void GoToCertificationsTab()
         {
             //Click on  Certifications Tab
             CertificationsTab().Click();
         }
 
-        public static void AddCertifications()
+        public void AddCertifications()
         {
             int i = 1;
-            string AddCertifications_Excel = "";
-            string AddCertifiedFrom_Excel = "";
-            string AddCertifiedYear_Excel = "";
 
             //Excel sheet path
-            ExcelLibHelper.PopulateInCollection(@"C:\Users\sobis\Desktop\Internship\Mars\Repo\MarsQA-1\SpecflowTests\Data\Certifications_Data.xlsx", "Add Certification");
+            ExcelLibHelper.PopulateInCollection(ConstantHelpers.CertificationsExcelPath,ConstantHelpers.AddingCertificationSheet);
 
             do
             {
                 if (i >= 2)
                 {
-                    //Click on AddNew button
-                    CertiAddNewBtn().Click();
-                    //Enter Certification
-                    AddCertificationTextBox().SendKeys(AddCertifications_Excel);
-                    //Enter Certified From
-                    CertifiedFromTextBox().SendKeys(AddCertifiedFrom_Excel);
-                    //Enter Year of Certification
-                    YearofCertificationDropdown().SendKeys(AddCertifiedYear_Excel);
-                    //Click Add button
-                    CertiAddBtn().Click();
+                    //Adding Certification, CertifiedFrom and Year 
+                    CertificationAddData();
                 }
                 i = i + 1;
 
@@ -70,15 +62,10 @@ namespace MarsQA_1.SpecflowPages.Pages
             } while (AddCertifications_Excel != null);
         }
 
-        public static void ValidateAddedCertifications()
+        public bool ValidateAddedCertifications()
         {
-            //Excel sheet path
-            ExcelLibHelper.PopulateInCollection(@"C:\Users\sobis\Desktop\Internship\Mars\Repo\MarsQA-1\SpecflowTests\Data\Certifications_Data.xlsx", "Add Certification");
-
+           
             int i = 1;
-            string AddCertifications_Excel = "";
-            string AddCertifiedFrom_Excel = "";
-            string AddCertifiedYear_Excel = "";
             bool result = false;
 
             do
@@ -86,7 +73,7 @@ namespace MarsQA_1.SpecflowPages.Pages
                 if (i >= 2)
                 {
                     result = Compare(AddCertifications_Excel, AddCertifiedFrom_Excel, AddCertifiedYear_Excel);
-                    Assert.AreEqual(true, result);
+                    return result;
                 }
                 i = i + 1;
 
@@ -98,36 +85,26 @@ namespace MarsQA_1.SpecflowPages.Pages
                 AddCertifiedYear_Excel = ExcelLibHelper.ReadData(i, "Year");
 
             } while (AddCertifications_Excel != null);
+            return false;
         }
 
-        public static void EditCertifications()
+        public void EditCertifications()
         {
             int i = 1, row = 1;
 
-            string AddCertifications_Excel = "";
-            string AddCertifiedFrom_Excel = "";
-            string AddCertifiedYear_Excel = "";
             string EditCertifications_Excel = "";
             string EditCertifiedFrom_Excel = "";
             string EditCertifiedYear_Excel = "";
 
             //Excel sheet path
-            ExcelLibHelper.PopulateInCollection(@"C:\Users\sobis\Desktop\Internship\Mars\Repo\MarsQA-1\SpecflowTests\Data\Certifications_Data.xlsx", "Edit Certification");
-            //Adding
+            ExcelLibHelper.PopulateInCollection(ConstantHelpers.CertificationsExcelPath,ConstantHelpers.EditingCertificationSheet);
+            
             do
             {
                 if (i >= 2)
                 {
-                    //Click on AddNew button
-                    CertiAddNewBtn().Click();
-                    //Enter Certification
-                    AddCertificationTextBox().SendKeys(AddCertifications_Excel);
-                    //Enter Certified From
-                    CertifiedFromTextBox().SendKeys(AddCertifiedFrom_Excel);
-                    //Enter Year of Certification
-                    YearofCertificationDropdown().SendKeys(AddCertifiedYear_Excel);
-                    //Click Add button
-                    CertiAddBtn().Click();
+                    //Adding Certification, CertifiedFrom and Year 
+                    CertificationAddData();
 
                     Thread.Sleep(2000);
 
@@ -150,6 +127,7 @@ namespace MarsQA_1.SpecflowPages.Pages
                     UpdateFromTextBox(FromTextBox_C).SendKeys(EditCertifiedFrom_Excel);
                     //Enter year of Certification
                     UpdateYearofCertificationDropdown(YearofCertificationDropdown_C).SendKeys(EditCertifiedYear_Excel);
+                    
 
                     //Click Update button
                     CertiUpdateBtn().Click();
@@ -172,7 +150,7 @@ namespace MarsQA_1.SpecflowPages.Pages
             } while (AddCertifications_Excel != null);
         }
 
-        public static void ValidateEditedCertifications()
+        public bool ValidateEditedCertifications()
         {
             Thread.Sleep(2000);
             int i = 1;
@@ -181,15 +159,12 @@ namespace MarsQA_1.SpecflowPages.Pages
             string EditCertifiedYear_Excel = "";
             bool result = false;
 
-            //Excel sheet path
-            ExcelLibHelper.PopulateInCollection(@"C:\Users\sobis\Desktop\Internship\Mars\Repo\MarsQA-1\SpecflowTests\Data\Certifications_Data.xlsx", "Edit Certification");
-
             do
             {
                 if (i >= 2)
                 {
                     result = Compare(EditCertifications_Excel, EditCertifiedFrom_Excel, EditCertifiedYear_Excel);
-                    Assert.AreEqual(true, result);
+                    return result;
                 }
                 i = i + 1;
 
@@ -201,30 +176,21 @@ namespace MarsQA_1.SpecflowPages.Pages
                 EditCertifiedYear_Excel = ExcelLibHelper.ReadData(i, "EditYear");
 
             } while (EditCertifications_Excel != null);
+            return false;
         }
 
-        public static void DeleteCertifications()
+        public void DeleteCertifications()
         {
             int i = 1, row;
-            string AddCertifications_Excel = "";
-            string AddCertifiedFrom_Excel = "";
-            string AddCertifiedYear_Excel = "";
 
-            ExcelLibHelper.PopulateInCollection(@"C:\Users\sobis\Desktop\Internship\Mars\Repo\MarsQA-1\SpecflowTests\Data\Certifications_Data.xlsx", "Delete Certification");
+            ExcelLibHelper.PopulateInCollection(ConstantHelpers.CertificationsExcelPath,ConstantHelpers.DeletingCertificationSheet);
+           
             do
             {
                 if (i >= 2)
                 {
-                    //Click on AddNew button
-                    CertiAddNewBtn().Click();
-                    //Enter Certification
-                    AddCertificationTextBox().SendKeys(AddCertifications_Excel);
-                    //Enter Certified From
-                    CertifiedFromTextBox().SendKeys(AddCertifiedFrom_Excel);
-                    //Enter Year of Certification
-                    YearofCertificationDropdown().SendKeys(AddCertifiedYear_Excel);
-                    //Click Add button
-                    CertiAddBtn().Click();
+                    //Adding Certification, CertifiedFrom and Year 
+                    CertificationAddData();
 
                     Thread.Sleep(2000);
                     row = FindDataByRow(AddCertifications_Excel, AddCertifiedFrom_Excel, AddCertifiedYear_Excel);
@@ -243,15 +209,10 @@ namespace MarsQA_1.SpecflowPages.Pages
             } while (AddCertifications_Excel != null);
         }
 
-        public static void ValidateDeleteCertifications()
+        public bool ValidateDeleteCertifications()
         {
 
-            ExcelLibHelper.PopulateInCollection(@"C:\Users\sobis\Desktop\Internship\Mars\Repo\MarsQA-1\SpecflowTests\Data\Certifications_Data.xlsx", "Delete Certification");
-
             int i = 1;
-            string AddCertifications_Excel = "";
-            string AddCertifiedFrom_Excel = "";
-            string AddCertifiedYear_Excel = "";
             bool result = false;
 
             do
@@ -260,7 +221,7 @@ namespace MarsQA_1.SpecflowPages.Pages
                 {
 
                     result = VerifyDeletedData(AddCertifications_Excel, AddCertifiedFrom_Excel, AddCertifiedYear_Excel);
-                    Assert.AreEqual(true, result);
+                    return true;
                 }
                 i = i + 1;
 
@@ -272,9 +233,10 @@ namespace MarsQA_1.SpecflowPages.Pages
                 AddCertifiedYear_Excel = ExcelLibHelper.ReadData(i, "Add_Year");
 
             } while (AddCertifications_Excel != null);
+            return false;
         }
 
-        public static bool Compare(String Award, String From, String Year)
+        public bool Compare(String Award, String From, String Year)
         {
             int i = 1;
 
@@ -310,7 +272,7 @@ namespace MarsQA_1.SpecflowPages.Pages
             return false;
         }
 
-        public static int FindDataByRow(String Award, String From, String Year)
+        public int FindDataByRow(String Award, String From, String Year)
         {
             int i = 1;
 
@@ -346,7 +308,7 @@ namespace MarsQA_1.SpecflowPages.Pages
             return 0;
         }
 
-        public static bool VerifyDeletedData(String Award, String From, String Year)
+        public bool VerifyDeletedData(String Award, String From, String Year)
         {
             Thread.Sleep(3000);
             int i = 1;
@@ -377,6 +339,20 @@ namespace MarsQA_1.SpecflowPages.Pages
                 }
             }
             return true;
+        }
+
+        private void CertificationAddData()
+        {
+            //Click on AddNew button
+            CertiAddNewBtn().Click();
+            //Enter Certification
+            AddCertificationTextBox().SendKeys(AddCertifications_Excel);
+            //Enter Certified From
+            CertifiedFromTextBox().SendKeys(AddCertifiedFrom_Excel);
+            //Enter Year of Certification
+            YearofCertificationDropdown().SendKeys(AddCertifiedYear_Excel);
+            //Click Add button
+            CertiAddBtn().Click();
         }
     }
 }
